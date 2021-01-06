@@ -15,6 +15,7 @@ function sumStat(team, stat) {
     var total = 0;
     team.map(player => {
         total += parseInt(player.statistics[stat]);
+        return null;
     })
     return total;
 }
@@ -48,31 +49,41 @@ function generateTotals(team) {
 
 function generateTeamStats(team) {
     return team.map(player => {
-        return (
-            <tr key={player.personId}>
-                <td>{player.nameI}</td>
-                <td>{player.position}</td>
-                <td>{formatMinutes(player.statistics.minutes)}</td>
-                <td>{player.statistics.points}</td>
-                <td>{player.statistics.assists}</td>
-                <td>{player.statistics.reboundsTotal}</td>
-                <td>{player.statistics.reboundsOffensive}</td>
-                <td>{player.statistics.reboundsDefensive}</td>
-                <td>{player.statistics.steals}</td>
-                <td>{player.statistics.blocks}</td>
-                <td>{player.statistics.fieldGoalsMade}</td>
-                <td>{player.statistics.fieldGoalsAttempted}</td>
-                <td>{(player.statistics.fieldGoalsPercentage * 100).toFixed(1)}</td>
-                <td>{player.statistics.threePointersMade}</td>
-                <td>{player.statistics.threePointersAttempted}</td>
-                <td>{(player.statistics.threePointersPercentage * 100).toFixed(1)}</td>
-                <td>{player.statistics.freeThrowsMade}</td>
-                <td>{player.statistics.freeThrowsAttempted}</td>
-                <td>{(player.statistics.freeThrowsPercentage * 100).toFixed(1)}</td>
-                <td>{player.statistics.foulsPersonal}</td>
-                <td>{player.statistics.plusMinusPoints}</td>
-            </tr>
-        )
+        if (player.status == 'ACTIVE') {
+            return (
+                <tr key={player.personId}>
+                    <td>{player.nameI}</td>
+                    <td>{player.position}</td>
+                    <td>{formatMinutes(player.statistics.minutes)}</td>
+                    <td>{player.statistics.points}</td>
+                    <td>{player.statistics.assists}</td>
+                    <td>{player.statistics.reboundsTotal}</td>
+                    <td>{player.statistics.reboundsOffensive}</td>
+                    <td>{player.statistics.reboundsDefensive}</td>
+                    <td>{player.statistics.steals}</td>
+                    <td>{player.statistics.blocks}</td>
+                    <td>{player.statistics.fieldGoalsMade}</td>
+                    <td>{player.statistics.fieldGoalsAttempted}</td>
+                    <td>{(player.statistics.fieldGoalsPercentage * 100).toFixed(1)}</td>
+                    <td>{player.statistics.threePointersMade}</td>
+                    <td>{player.statistics.threePointersAttempted}</td>
+                    <td>{(player.statistics.threePointersPercentage * 100).toFixed(1)}</td>
+                    <td>{player.statistics.freeThrowsMade}</td>
+                    <td>{player.statistics.freeThrowsAttempted}</td>
+                    <td>{(player.statistics.freeThrowsPercentage * 100).toFixed(1)}</td>
+                    <td>{player.statistics.foulsPersonal}</td>
+                    <td>{player.statistics.plusMinusPoints}</td>
+                </tr>
+            )
+        }
+        else {
+            return (
+                <tr key={player.personId}>
+                    <td>{player.nameI}</td>
+                    <td colSpan='20' style={{textAlign: 'center'}}>DNP{player.notPlayingDescription != undefined && player.notPlayingDescription != ''  ? ' - ' + player.notPlayingDescription : ''}</td>
+                </tr>
+            )
+        }
     })
 }
 
@@ -132,7 +143,8 @@ function BoxScore(game) {
         , document.getElementById('boxscore'));
         return null;
     }
-    // console.log(data.homeTeam);
+    console.log(data);
+    // console.log(data.awayTeam.players);
     // console.log(data.homeTeam.players);
 
     ReactDOM.render(

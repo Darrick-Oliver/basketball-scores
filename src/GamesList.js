@@ -52,7 +52,10 @@ function getStatus(game) {
     if (status.includes('ET')) {
         status = getGameTime(game);
     }
-    return status;
+    if (status.includes('Q') || status.includes('Half')) {
+        return <h3 style={{color: 'red'}}>{status}</h3>
+    }
+    return <h3>{status}</h3>;
 }
 
 function getTodaysScoreboard() {
@@ -72,7 +75,7 @@ const GamesList = () => {
         <div key={game.gameId}>
           <h2>{game.homeTeam.teamName} vs {game.awayTeam.teamName}</h2>
           <p>{game.homeTeam.score} : {game.awayTeam.score}</p>
-          <h3>{getStatus(game)}</h3>
+          {getStatus(game)}
           <Button variant="dark" onClick={() => handlePress(game)}>Box Score</Button>{' '}
         </div>
       )
