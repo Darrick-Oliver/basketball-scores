@@ -5,6 +5,6 @@ This website shows live basketball scores with their box scores using the NBA AP
 # To-do
 
 - Add an automatic refresh every few minutes (Box score and game score)
-- Add more statistics
+- Add login
 - Pretty up the CSS
 - Maybe add custom colors to team's box score
