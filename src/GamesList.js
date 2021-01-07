@@ -4,6 +4,10 @@ import {Button} from 'react-bootstrap';
 import BoxScore from './BoxScore.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+function getImage(name) {
+    return `${process.env.PUBLIC_URL}/assets/images/` + name + '.png'
+}
+
 // Fix, include dates on hours past 24 and on hours below 0
 function getGameTime(game) {
     var timeUTC = game.gameTimeUTC.match(/\d\d:\d\d:\d\d/)[0];
@@ -73,7 +77,7 @@ const GamesList = () => {
     return data.games.map(game => {
       return (
         <div key={game.gameId}>
-          <h2>{game.homeTeam.teamName} vs {game.awayTeam.teamName}</h2>
+          <h2><img src={getImage(game.homeTeam.teamId)} alt={game.homeTeam.teamName} height='30'></img> {game.homeTeam.teamTricode} vs {game.awayTeam.teamTricode} <img src={getImage(game.awayTeam.teamId)} alt={game.awayTeam.teamName} height='30'></img></h2>
           <p>{game.homeTeam.score} : {game.awayTeam.score}</p>
           {getStatus(game)}
           <Button variant="dark" onClick={() => handlePress(game)}>Box Score</Button>{' '}

@@ -11,6 +11,10 @@ function formatMinutes(minutes) {
     return totMinutes + ':' + totSeconds;
 }
 
+function getImage(name) {
+    return `${process.env.PUBLIC_URL}/assets/images/` + name + '.png'
+}
+
 function sumStat(team, stat) {
     var total = 0;
     team.map(player => {
@@ -21,7 +25,7 @@ function sumStat(team, stat) {
 }
 
 // Fix team +/-
-function generateTotals(team) {
+function generateTotals(team, plusMinus) {
     return (
         <tr>
             <td colSpan='3'>Totals</td>
@@ -42,7 +46,7 @@ function generateTotals(team) {
             <td>{sumStat(team, 'freeThrowsAttempted')}</td>
             <td>{(sumStat(team, 'freeThrowsMade')/sumStat(team, 'freeThrowsAttempted') * 100).toFixed(1)}</td>
             <td>{sumStat(team, 'foulsPersonal')}</td>
-            <td>{}</td>
+            <td>{plusMinus}</td>
         </tr>
     )
 }
@@ -80,14 +84,15 @@ function generateTeamStats(team) {
             return (
                 <tr key={player.personId}>
                     <td>{player.nameI}</td>
-                    <td colSpan='20' style={{textAlign: 'center'}}>DNP{player.notPlayingDescription != undefined && player.notPlayingDescription != ''  ? ' - ' + player.notPlayingDescription : ''}</td>
+                    <td colSpan='20' style={{textAlign: 'center'}}>OUT{player.notPlayingDescription != undefined && player.notPlayingDescription != ''  ? ' - ' + player.notPlayingDescription : ''}</td>
                 </tr>
             )
         }
     })
 }
 
-function generateTable(id, team) {
+function generateTable(id, team, score, oppScore) {
+    var teamPlusMinus = score - oppScore;
     return (
         <table id={id}>
             <thead>
@@ -119,7 +124,7 @@ function generateTable(id, team) {
                 {generateTeamStats(team)}
             </tbody>
             <tfoot>
-                {generateTotals(team)}
+                {generateTotals(team, teamPlusMinus)}
             </tfoot>
         </table>
     )
@@ -127,10 +132,10 @@ function generateTable(id, team) {
 
 function BoxScore(game) {
     var data;
-    const url='/static/json/liveData/boxscore/boxscore_' + game.gameId + '.json';
+    // const url='/static/json/liveData/boxscore/boxscore_' + game.gameId + '.json';
 
     // Testing url
-    // var url = '/static/json/liveData/boxscore/boxscore_0022000092.json';
+    var url = '/static/json/liveData/boxscore/boxscore_0022000071.json';
 
     try {
         data = requestData(url, false).game;
@@ -144,15 +149,16 @@ function BoxScore(game) {
         return null;
     }
     console.log(data);
-    // console.log(data.awayTeam.players);
-    // console.log(data.homeTeam.players);
+
+    var scoreHome = data.homeTeam.score;
+    var scoreAway = data.awayTeam.score;
 
     ReactDOM.render(
         <div>
-            <h2>{data.homeTeam.teamCity} {data.homeTeam.teamName}</h2>
-            {generateTable('home', data.homeTeam.players)}
-            <h2>{data.awayTeam.teamCity} {data.awayTeam.teamName}</h2>
-            {generateTable('away', data.awayTeam.players)}
+            <h2><img src={getImage(data.homeTeam.teamId)} height='50' alt={data.homeTeam.teamName}></img> {data.homeTeam.teamCity} {data.homeTeam.teamName}</h2>
+            {generateTable('home', data.homeTeam.players, scoreHome, scoreAway)}
+            <h2><img src={getImage(data.awayTeam.teamId)} height='50' alt={data.awayTeam.teamName}></img> {data.awayTeam.teamCity} {data.awayTeam.teamName}</h2>
+            {generateTable('away', data.awayTeam.players, scoreAway, scoreHome)}
         </div>
     
     , document.getElementById('boxscore'));
