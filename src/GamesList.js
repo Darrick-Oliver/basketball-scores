@@ -4,12 +4,22 @@ import {Button} from 'react-bootstrap';
 import BoxScore from './BoxScore.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function getImage(name) {
+
+/**
+ *  Used for retrieving photos from the /images folder using only the image name
+ *  Returns the link to the image with the given name
+ */
+const getImage = (name) => {
     return `${process.env.PUBLIC_URL}/assets/images/` + name + '.png'
 }
 
-// Fix, include dates on hours past 24 and on hours below 0
-function getGameTime(game) {
+
+/**
+ *  Calculates the tipoff time in the user's timezone
+ *  Returns the calculated time
+ */
+const getGameTime = (game) => {
+    // Fix, include dates on hours past 24 and on hours below 0
     var timeUTC = game.gameTimeUTC.match(/\d\d:\d\d:\d\d/)[0];
     var date = new Date();
     var offset = date.getTimezoneOffset();
@@ -51,22 +61,39 @@ function getGameTime(game) {
     return localTime;
 }
 
-function getStatus(game) {
+
+/**
+ *  Determines formatting for different game statuses
+ *      e.g.
+ *          Before tipoff: Game time in local time
+ *          Live game: Red, bolded status
+ *  Returns the formatted status
+ */
+const getStatus = (game) => {
     var status = game.gameStatusText;
     if (status.includes('ET')) {
         status = getGameTime(game);
     }
     if (status.includes('Q') || status.includes('Half')) {
-        return <h3 style={{color: 'red'}}>{status}</h3>
+        return <h3 style={{color: 'red', fontWeight: 'bold'}}>{status}</h3>
     }
     return <h3>{status}</h3>;
 }
 
-function getTodaysScoreboard() {
-    const url='/static/json/liveData/scoreboard/todaysScoreboard_00.json'
+
+/**
+ *  Requests the scoreboard from nba.com
+ *  Returns the acquired data
+ */
+const getTodaysScoreboard = () => {
+    const url='/static/json/liveData/scoreboard/todaysScoreboard_00.json';
     return requestData(url).scoreboard;
 }
 
+
+/**
+ *  Creates the individual game boxes
+ */
 const GamesList = () => {
 
     const handlePress = (game) => {

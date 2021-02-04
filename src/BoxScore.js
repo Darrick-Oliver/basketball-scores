@@ -1,7 +1,12 @@
 import requestData from './functions.js';
 import ReactDOM from 'react-dom';
 
-function formatMinutes(minutes) {
+
+/**
+ *  Formats the minutes from nba.com data to make it readable
+ *  Returns the formatted minutes
+ */
+const formatMinutes = (minutes) => {
     var totMinutes = parseInt(minutes.match(/\d\dM/)[0].slice(0, -1));
     var totSeconds = minutes.match(/\d\d\./)[0].slice(0, -1);
 
@@ -11,11 +16,21 @@ function formatMinutes(minutes) {
     return totMinutes + ':' + totSeconds;
 }
 
-function getImage(name) {
+
+/**
+ *  Used for retrieving photos from the /images folder using only the image name
+ *  Returns the link to the image with the given name
+ */
+const getImage = (name) => {
     return `${process.env.PUBLIC_URL}/assets/images/` + name + '.png'
 }
 
-function sumStat(team, stat) {
+
+/**
+ *  Sums the given stat of each player on the inputted team
+ *  Returns the total
+ */
+const sumStat = (team, stat) => {
     var total = 0;
     team.map(player => {
         total += parseInt(player.statistics[stat]);
@@ -24,8 +39,12 @@ function sumStat(team, stat) {
     return total;
 }
 
-// Fix team +/-
-function generateTotals(team, plusMinus) {
+
+/**
+ *  Generates the totals for each stat on the given team
+ *  Returns a table row with the summed stats in the correct columns
+ */
+const generateTotals = (team, plusMinus) => {
     return (
         <tr>
             <td colSpan='3'>Totals</td>
@@ -51,7 +70,12 @@ function generateTotals(team, plusMinus) {
     )
 }
 
-function generateTeamStats(team) {
+
+/**
+ *  Generates the stats for each player on the given team
+ *  Returns one table row for each player, with their stats filled in the correct column
+ */
+const generateTeamStats = (team) => {
     return team.map(player => {
         if (player.status == 'ACTIVE') {
             return (
@@ -91,7 +115,12 @@ function generateTeamStats(team) {
     })
 }
 
-function generateTable(id, team, score, oppScore) {
+
+/**
+ *  Creates the full box score table, including the header and footer
+ *  Returns the created box score table
+ */
+const generateTable = (id, team, score, oppScore) => {
     var teamPlusMinus = score - oppScore;
     return (
         <table id={id}>
@@ -130,12 +159,17 @@ function generateTable(id, team, score, oppScore) {
     )
 }
 
-function BoxScore(game) {
+
+/**
+ *  Creates the box score for the given game
+ *  Returns null
+ */
+const BoxScore = (game) => {
     var data;
-    // const url='/static/json/liveData/boxscore/boxscore_' + game.gameId + '.json';
+    const url='/static/json/liveData/boxscore/boxscore_' + game.gameId + '.json';
 
     // Testing url
-    var url = '/static/json/liveData/boxscore/boxscore_0022000071.json';
+    // var url = '/static/json/liveData/boxscore/boxscore_0022000071.json';
 
     try {
         data = requestData(url, false).game;
@@ -148,11 +182,12 @@ function BoxScore(game) {
         , document.getElementById('boxscore'));
         return null;
     }
-    console.log(data);
+    // console.log(data);
 
     var scoreHome = data.homeTeam.score;
     var scoreAway = data.awayTeam.score;
 
+    // Creating the Box Score Area
     ReactDOM.render(
         <div>
             <h2><img src={getImage(data.homeTeam.teamId)} height='50' alt={data.homeTeam.teamName}></img> {data.homeTeam.teamCity} {data.homeTeam.teamName}</h2>

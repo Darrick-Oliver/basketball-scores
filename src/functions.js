@@ -1,6 +1,10 @@
 import $ from 'jquery';
 
-function requestData(url, parse = true) {
+/**
+ *  Requests data from the given url, parses the JSON by default
+ *  Returns the data found
+ */
+const requestData = (url, parse = true) => {
     var data;
     $.ajax({
         url: url,
@@ -15,7 +19,6 @@ function requestData(url, parse = true) {
             }
         },
         error: function(error) {
-            // Handle this better, return an error of some kind
             console.log('Error ' + error.message);
         }
     })

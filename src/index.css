@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+#root {
+  text-align: center;
+}
+
 #boxscore {
   font-size: 14px;
 }

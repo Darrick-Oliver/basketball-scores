@@ -1,15 +1,12 @@
 import './App.css';
 import GamesList from './GamesList.js'
 
-// Currently using nba's website as proxy to get past CORS
-// Find better way to fix this error
-
-function formatDate() {
+const formatDate = () => {
   var date = new Date();
   return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-function App() {
+const App = () => {
 
   return (
     <div className="App">
