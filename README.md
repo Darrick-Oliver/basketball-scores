@@ -4,6 +4,7 @@ This website shows live NBA scores with their box scores. Requires React framewo
 
 # To-do
 
+- Collect data once per refresh and call functions with scoreboard data as a parameter
 - Fix times and dates on games
 - Sortable tables
 - Filterable tables
