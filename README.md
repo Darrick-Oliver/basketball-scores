@@ -1,6 +1,6 @@
 # Basketball Scores Website
 
-This website shows live basketball scores with their box scores. Requires React framework.
+This website shows live NBA scores with their box scores. Requires React framework.
 
 # To-do
 
