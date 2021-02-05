@@ -74,8 +74,14 @@ const getStatus = (game) => {
     if (status.includes('ET')) {
         status = getGameTime(game);
     }
-    if (status.includes('Q') || status.includes('Half')) {
+    else if (status.includes('Q') || status.includes('Half')) {
         return <h3 style={{color: 'red', fontWeight: 'bold'}}>{status}</h3>
+    }
+    else if (status.includes('PT')) {
+        var quarter = status.match(/Q\d/)[0];
+        var minutes = status.match(/PT\d\d/)[0].match(/\d\d/)[0];
+        var seconds = status.match(/M\d\d/)[0].match(/\d\d/)[0];
+        return <h3 style={{color: 'red', fontWeight: 'bold'}}>{quarter + ' ' + minutes + ':' + seconds}</h3>;
     }
     return <h3>{status}</h3>;
 }
@@ -103,8 +109,9 @@ const GamesList = (gameData) => {
         BoxScore(game);
     }
 
-    var hideScore = 0
-    // hideScore = 1610612744; // warriors
+    // Hides the score of the given teamId
+    var hideScore = 0;
+    hideScore = 1610612744; // warriors
     
     return data.games.map(game => {
       return (
