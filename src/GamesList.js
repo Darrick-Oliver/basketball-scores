@@ -94,18 +94,23 @@ const getTodaysScoreboard = () => {
 /**
  *  Creates the individual game boxes
  */
-const GamesList = () => {
+const GamesList = (gameData) => {
+    var data;
+    if (gameData.length == undefined)   data = getTodaysScoreboard();
+    else                                data = gameData;
 
     const handlePress = (game) => {
         BoxScore(game);
     }
 
-    var data = getTodaysScoreboard()
+    var hideScore = 0
+    // hideScore = 1610612744; // warriors
+    
     return data.games.map(game => {
       return (
         <div key={game.gameId}>
           <h2><img src={getImage(game.homeTeam.teamId)} alt={game.homeTeam.teamName} height='30'></img> {game.homeTeam.teamTricode} vs {game.awayTeam.teamTricode} <img src={getImage(game.awayTeam.teamId)} alt={game.awayTeam.teamName} height='30'></img></h2>
-          <p>{game.homeTeam.score} : {game.awayTeam.score}</p>
+          <p>{game.homeTeam.teamId == hideScore || game.awayTeam.teamId == hideScore ? '*' : game.homeTeam.score} : {game.homeTeam.teamId == hideScore || game.awayTeam.teamId == hideScore ? '*' : game.awayTeam.score}</p>
           {getStatus(game)}
           <Button variant="dark" onClick={() => handlePress(game)}>Box Score</Button>{' '}
         </div>

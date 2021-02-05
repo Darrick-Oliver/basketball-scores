@@ -3,7 +3,7 @@ import requestData from './functions.js';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-var interval;
+var interval = 5000;
 
 /**
  *  Checks to see if all games are finished/if they haven't started yet
@@ -55,15 +55,15 @@ var refreshIntervalID = setInterval(function() {
     if (previous && current && previous !== current) {
         ReactDOM.render(
             <React.StrictMode>
-              <App />
+              {App(data)}
             </React.StrictMode>,
             document.getElementById('root')
         );
     }
     previous = current;
 
-    // If all games for the day are finished, don't ping nba.com for more data than needed
+    // Don't ping nba.com for more data than needed
     if (stopPinging(data)) {
         clearInterval(refreshIntervalID);
     }
-}, 5000);
+}, interval);

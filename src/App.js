@@ -6,7 +6,7 @@ const formatDate = () => {
   return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
 }
 
-const App = () => {
+const App = (gameData = null) => {
 
   return (
     <div className="App">
@@ -16,7 +16,8 @@ const App = () => {
       </div>
       
       <div className="games">
-        <GamesList />
+        {/* <GamesList /> */}
+        {GamesList(gameData)}
       </div>
     </div>
   );

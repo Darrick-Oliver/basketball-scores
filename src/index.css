@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+::selection {
+  background: rgb(180, 180, 180);
+}
+
 #root {
   text-align: center;
 }
