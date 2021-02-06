@@ -18,46 +18,10 @@ const getImage = (name) => {
  *  Returns the calculated time
  */
 const getGameTime = (game) => {
-    // Fix, include dates on hours past 24 and on hours below 0
-    var timeUTC = game.gameTimeUTC.match(/\d\d:\d\d:\d\d/)[0];
-    var date = new Date();
-    var offset = date.getTimezoneOffset();
-
-    var hours = parseInt(timeUTC.match(/\b\d\d:/)[0].match(/\d\d/)[0]);
-    var minutes = parseInt(timeUTC.match(/:\d\d:/)[0].match(/\d\d/)[0]);
-
-    // Weird but works
-    var totalMins = hours * 60 + minutes - offset;
-    var localHour = Math.floor(totalMins/60);
-    var localMins = totalMins % 60;
-    var period;
-    if (localHour > 12) {
-        localHour = localHour - 12;
-        period = 'pm';
-    }
-    else if (localHour == 12) {
-        period = 'pm';
-    }
-    else if (localHour < 0) {
-        localHour = localHour + 12;
-        period = 'pm';
-    }
-    else {
-        period = 'am';
-    }
-    if (localMins < 0) {
-        localMins = localMins + 60;
-    }
-
-    var localTime;
-    if (localMins < 10) {
-        localTime = localHour + ':0' + localMins + ' ' + period;
-    }
-    else {
-        localTime = localHour + ':' + localMins + ' ' + period;
-    }
-
-    return localTime;
+    var gameDate = new Date(game.gameTimeUTC);
+    // Formats the time the way I want it to
+    // Gross but works
+    return (gameDate.getHours() > 12 ? gameDate.getHours() - 12 : (gameDate.getHours() === 0 ? '12' : gameDate.getHours())) + ':' + (gameDate.getMinutes() < 10 ? '0' + gameDate.getMinutes() : gameDate.getMinutes()) + ' ' + (gameDate.getHours() >= 12 ? 'PM' : 'AM');
 }
 
 
@@ -101,9 +65,11 @@ const getTodaysScoreboard = () => {
  */
 const GamesList = (gameData) => {
     var data;
-    // If data recieved is empty, query your own. Otherwise, set the data to gameData
-    if (Object.keys(gameData).length === 0 && gameData.constructor === Object)   data = getTodaysScoreboard();
-    else                                data = gameData;
+    // If data recieved is empty, query your own. Otherwise, set the data to given data
+    if (Object.keys(gameData).length === 0 && gameData.constructor === Object)
+        data = getTodaysScoreboard();
+    else
+        data = gameData;
 
     const handlePress = (game) => {
         BoxScore(game);
@@ -112,7 +78,7 @@ const GamesList = (gameData) => {
     // Hides the score of the given teamIds
     var hideScores = [];
     hideScores.push(1610612744); // warriors
-    hideScores.push(1610612738);
+    // hideScores.push(1610612738); // Testing multi-hiding
     
     return data.games.map(game => {
       return (

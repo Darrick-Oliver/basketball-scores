@@ -4,11 +4,14 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 
 const defaultInterval = 10000;   // 10 seconds
+const url = '/static/json/liveData/scoreboard/todaysScoreboard_00.json';    // Scoreboard url
 
 var interval = defaultInterval;
+var previous = null;
+var current = null;
 
 /**
- *  Checks to see if all games are finished/if they haven't started yet
+ *  Checks to see if all games are finished/if they haven't started yet and determines next interval time
  *  Returns true if we want to stop pinging nba.com for data and false if not
  */
 const stopPinging = (data) => {
@@ -38,16 +41,14 @@ const stopPinging = (data) => {
     return status;
 }
 
-const url='/static/json/liveData/scoreboard/todaysScoreboard_00.json';
-var previous = null;
-var current = null;
-
-// Refresh data
+/**
+ *  Refreshes the data based on the value of interval
+ */
 var refreshIntervalID = setInterval(function() {
     var data = requestData(url).scoreboard;
     current = JSON.stringify(data);
 
-    // Refresh App, reloads the data for each team and for the box score
+    // Check if any changes were made to the data, and if so, refresh App with the new data
     if (previous && current && previous !== current) {
         ReactDOM.render(
             <React.StrictMode>
@@ -58,7 +59,7 @@ var refreshIntervalID = setInterval(function() {
     }
     previous = current;
 
-    // Don't ping nba.com for more data than needed
+    // Don't request data more than needed
     if (stopPinging(data)) {
         clearInterval(refreshIntervalID);
     }
