@@ -3,7 +3,9 @@ import requestData from './functions.js';
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-var interval = 5000;
+const defaultInterval = 10000;   // 10 seconds
+
+var interval = defaultInterval;
 
 /**
  *  Checks to see if all games are finished/if they haven't started yet
@@ -18,27 +20,21 @@ const stopPinging = (data) => {
             status = false;
         }
         else if (game.gameStatusText.includes("ET")) {
-            var timeUTC = game.gameTimeUTC.match(/\d\d:\d\d:\d\d/)[0];
-            var date = new Date();
+            // Find current and game dates
+            var currDate = new Date();
+            var gameDate = new Date(game.gameTimeUTC);
 
-            // Convert game time to hours and minutes and calculate the total minutes
-            var hours = parseInt(timeUTC.match(/\b\d\d:/)[0].match(/\d\d/)[0]);
-            var minutes = parseInt(timeUTC.match(/:\d\d:/)[0].match(/\d\d/)[0]);
-            var totalMins = hours * 60 + minutes;
-
-            // Use the difference between the tipoff time and local time to determine the next refresh interval
-            var localMins = date.getUTCHours() * 60 + date.getUTCMinutes();
-            var minDiff = totalMins - localMins;
-
-            // Convert minutes to milliseconds
-            possibleIntervals.push(minDiff * 60 * 1000);
+            // Add this time difference to the list of possible intervals
+            possibleIntervals.push(gameDate - currDate);
         }
         return null;
     })
     // If there are any time differences availalble, choose the smallest
     if (possibleIntervals.length > 0)     interval = Math.min.apply(Math, possibleIntervals);
+
     // If there are live games, defaultly set the interval to 5 seconds
-    if (status == false)    interval = 5000;
+    if (status == false)    interval = defaultInterval;
+
     return status;
 }
 

@@ -18,6 +18,8 @@
 .env.test.local
 .env.production.local
 .eslintcache
+icon.png
+iconbigger.png
 
 npm-debug.log*
 yarn-debug.log*
