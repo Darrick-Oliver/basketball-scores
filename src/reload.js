@@ -33,11 +33,15 @@ const stopPinging = (data) => {
         return null;
     })
     // If there are any time differences availalble, choose the smallest
-    if (possibleIntervals.length > 0)     interval = Math.min.apply(Math, possibleIntervals);
-
+    if (possibleIntervals.length > 0)
+        interval = Math.min.apply(Math, possibleIntervals);
+    else if (possibleIntervals.length == 0)
+        status = true;
+    
     // If there are live games, defaultly set the interval to 5 seconds
-    if (status == false)    interval = defaultInterval;
-
+    if (status == false || interval < 0)
+        interval = defaultInterval;
+    
     return status;
 }
 
